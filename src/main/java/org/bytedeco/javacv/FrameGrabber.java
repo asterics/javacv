@@ -31,6 +31,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -177,7 +178,7 @@ public abstract class FrameGrabber implements Closeable {
             SENSOR_PATTERN_BGGR = (1L << 32) | 1;
 
     protected int videoStream = -1, audioStream = -1;
-    protected String format = null;
+    protected String format = null, videoCodecName = null, audioCodecName = null;
     protected int imageWidth = 0, imageHeight = 0, audioChannels = 0;
     protected ImageMode imageMode = ImageMode.COLOR;
     protected long sensorPattern = -1L;
@@ -191,14 +192,15 @@ public abstract class FrameGrabber implements Closeable {
     protected int numBuffers = 4;
     protected double gamma = 0.0;
     protected boolean deinterlace = false;
-    protected HashMap<String, String> options = new HashMap<String, String>();
-    protected HashMap<String, String> videoOptions = new HashMap<String, String>();
-    protected HashMap<String, String> audioOptions = new HashMap<String, String>();
-    protected HashMap<String, String> metadata = new HashMap<String, String>();
-    protected HashMap<String, String> videoMetadata = new HashMap<String, String>();
-    protected HashMap<String, String> audioMetadata = new HashMap<String, String>();
+    protected Map<String, String> options = new HashMap<String, String>();
+    protected Map<String, String> videoOptions = new HashMap<String, String>();
+    protected Map<String, String> audioOptions = new HashMap<String, String>();
+    protected Map<String, String> metadata = new HashMap<String, String>();
+    protected Map<String, String> videoMetadata = new HashMap<String, String>();
+    protected Map<String, String> audioMetadata = new HashMap<String, String>();
     protected int frameNumber = 0;
     protected long timestamp = 0;
+    protected int maxDelay = -1;
 
     public int getVideoStream() {
         return videoStream;
@@ -219,6 +221,20 @@ public abstract class FrameGrabber implements Closeable {
     }
     public void setFormat(String format) {
         this.format = format;
+    }
+
+    public String getVideoCodecName() {
+        return videoCodecName;
+    }
+    public void setVideoCodecName(String videoCodecName) {
+        this.videoCodecName = videoCodecName;
+    }
+
+    public String getAudioCodecName() {
+        return audioCodecName;
+    }
+    public void setAudioCodecName(String audioCodecName) {
+        this.audioCodecName = audioCodecName;
     }
 
     public int getImageWidth() {
@@ -368,6 +384,48 @@ public abstract class FrameGrabber implements Closeable {
         this.deinterlace = deinterlace;
     }
 
+    public Map<String, String> getOptions() {
+        return options;
+    }
+    public void setOptions(Map<String, String> options) {
+        this.options = options;
+    }
+
+    public Map<String, String> getVideoOptions() {
+        return videoOptions;
+    }
+    public void setVideoOptions(Map<String, String> options) {
+        this.videoOptions = options;
+    }
+
+    public Map<String, String> getAudioOptions() {
+        return audioOptions;
+    }
+    public void setAudioOptions(Map<String, String> options) {
+        this.audioOptions = options;
+    }
+
+    public Map<String, String> getMetadata() {
+        return metadata;
+    }
+    public void setMetadata(Map<String, String> metadata) {
+        this.metadata = metadata;
+    }
+
+    public Map<String, String> getVideoMetadata() {
+        return videoMetadata;
+    }
+    public void setVideoMetadata(Map<String, String> metadata) {
+        this.videoMetadata = metadata;
+    }
+
+    public Map<String, String> getAudioMetadata() {
+        return audioMetadata;
+    }
+    public void setAudioMetadata(Map<String, String> metadata) {
+        this.audioMetadata = metadata;
+    }
+
     public String getOption(String key) {
         return options.get(key);
     }
@@ -422,6 +480,13 @@ public abstract class FrameGrabber implements Closeable {
     }
     public void setTimestamp(long timestamp) throws Exception {
         this.timestamp = timestamp;
+    }
+
+    public int getMaxDelay() {
+        return maxDelay;
+    }
+    public void setMaxDelay(int maxDelay) {
+        this.maxDelay = maxDelay;
     }
 
     public int getLengthInFrames() {
